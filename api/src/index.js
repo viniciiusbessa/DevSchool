@@ -6,16 +6,12 @@ app.use(cors());
 app.use(express.json());
 
 app.get('/matricula', async (req, resp) => {
-
- try{
-     let matricula = await
-     db.tb_matricula.findAll ({
-     order: [["id.matricula","desc"]]})
-     resp.send(matricula);
-
-} catch(e) {
-  resp.send({erro: e.toString()  })
-}
+    try {
+        let matricula = await db.tb_matricula.findAll();
+        resp.send(matricula);
+    } catch (e) {
+        resp.send({ erro: 'Ocorreu um erro!' })
+    }
 })
 
 
@@ -38,7 +34,23 @@ app.post('/matricula', async (req,resp) => {
 
 app.put('/matricula/:id', async (req,resp) => {
     try{
-       
+        let {nome, chamada, curso, turma} = req.body;
+        let {id} = req.params;
+
+        let r = await db.tb_matricula.update(
+            {
+                nm_aluno: nome,
+                nr_chamada: chamada,
+                nm_curso: curso,
+                nm_turma: turma
+            },
+
+            {
+                where: { id_matricula: id }
+            }
+        )
+        resp.sendStatus(200);
+
     }catch(e) {
         resp.send({erro: e.toString()  })
     }
@@ -47,7 +59,11 @@ app.put('/matricula/:id', async (req,resp) => {
 
 app.delete('/matricula/:id', async (req,resp) => {
     try{
+        let {id} = req.params;
 
+        let r = await db.tb_matricula.destroy({where: {id_matricula: id } })
+        resp.sendStatus(200);
+        
     }catch(e) {
         resp.send({erro: e.toString()  })
     }
