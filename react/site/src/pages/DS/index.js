@@ -38,7 +38,6 @@ async function inserir () {
 
     LimparCampos();
     listar();
-    
 }
 
 async function LimparCampos(){
